@@ -1,0 +1,26 @@
+name: citizen
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: citizen
+      POSTGRES_USER: citizen
+      POSTGRES_PASSWORD: citizen
+    ports:
+      - "5437:5432"
+    volumes:
+      - citizen_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U citizen -d citizen"]
+      interval: 5s
+      retries: 10
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6382:6379"
+    volumes:
+      - citizen_redis:/data
+    command: redis-server --appendonly yes
+volumes:
+  citizen_pg:
+  citizen_redis:
